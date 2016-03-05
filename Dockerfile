@@ -18,8 +18,11 @@ RUN locale-gen en_US.UTF-8 && \
     # Remove iceweasel in favor of firefox
     apt remove iceweasel && \
     DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
-        # curl is a prereq to be able to download chrome
+        # avoid ssl cert errors when using curl to get signing key
         ca-certificates \
+        # dep for chrome, see https://github.com/dnschneid/crouton/issues/632#issuecomment-35228182
+        hicolor-icon-theme \
+        # curl is a prereq to be able to download chrome
         curl && \
 
     # Key for chrome
