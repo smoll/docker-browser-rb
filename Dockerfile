@@ -5,7 +5,7 @@ ENV LANGUAGE  en_US.UTF-8
 ENV LC_ALL    en_US.UTF-8
 
 # Use a version available on the Brightbox repo (https://www.brightbox.com/docs/ruby/ubuntu/)
-ENV RUBY_VERSION 2.1
+ENV RUBY_VERSION 2.3
 
 # Locale stuff
 RUN locale-gen en_US.UTF-8 && \
