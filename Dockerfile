@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM ubuntu-debootstrap:14.04
 
 ENV LANG      en_US.UTF-8
 ENV LANGUAGE  en_US.UTF-8
