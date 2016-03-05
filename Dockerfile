@@ -55,7 +55,7 @@ RUN locale-gen en_US.UTF-8 && \
     apt-get update -q && \
     DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
         google-chrome-stable \
-        firefox \
+        firefox && \
 
     # clean up
     rm -rf /var/lib/apt/lists/* && \
