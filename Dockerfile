@@ -14,29 +14,12 @@ RUN locale-gen en_US.UTF-8 && \
     printf "path-exclude /usr/share/doc/*\npath-exclude /usr/share/man/*\npath-exclude /usr/share/info/*\npath-exclude /usr/share/lintian/*" >> /etc/dpkg/dpkg.cfg.d/nodoc && \
     cd /usr/share && rm -fr doc/* man/* info/* lintian/* && \
 
-    apt-get update -q && \
-    # Remove iceweasel in favor of firefox
-    apt remove iceweasel && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
-        # avoid ssl cert errors when using curl to get signing key
-        ca-certificates \
-        # dep for chrome, see https://github.com/dnschneid/crouton/issues/632#issuecomment-35228182
-        hicolor-icon-theme \
-        # curl is a prereq to be able to download chrome
-        curl && \
-
-    # Key for chrome
-    echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list && \
-    curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-
-    # Key for firefox
-    echo "deb http://downloads.sourceforge.net/project/ubuntuzilla/mozilla/apt all main" > /etc/apt/sources.list.d/ubuntuzilla.list && \
-    apt-key adv --recv-keys --keyserver keyserver.ubuntu.com C1289A29 && \
-
-    # Ruby + build tools
+    # Install Ruby + build tools
     apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C3173AA6 && \
     echo deb http://ppa.launchpad.net/brightbox/ruby-ng/ubuntu trusty main > /etc/apt/sources.list.d/brightbox-ruby-ng-trusty.list && \
     apt-get update -q && \
+    # Remove iceweasel in favor of firefox
+    apt remove iceweasel && \
     DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
         ca-certificates \
         openssl \
@@ -49,15 +32,30 @@ RUN locale-gen en_US.UTF-8 && \
         ruby$RUBY_VERSION \
         ruby$RUBY_VERSION-dev \
 
-        # Browsers
-        google-chrome-stable \
-        firefox \
+        # dep for chrome, see https://github.com/dnschneid/crouton/issues/632#issuecomment-35228182
+        hicolor-icon-theme \
+        # curl is a prereq to be able to download chrome
+        curl \
 
         # Xvfb
         xvfb \
 
         # For video recording; see headless gem
         libav-tools && \
+
+    # Key for chrome
+    echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list && \
+    curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+
+    # Key for firefox
+    echo "deb http://downloads.sourceforge.net/project/ubuntuzilla/mozilla/apt all main" > /etc/apt/sources.list.d/ubuntuzilla.list && \
+    apt-key adv --recv-keys --keyserver keyserver.ubuntu.com C1289A29 && \
+
+    # Install browsers
+    apt-get update -q && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
+        google-chrome-stable \
+        firefox \
 
     # clean up
     rm -rf /var/lib/apt/lists/* && \
