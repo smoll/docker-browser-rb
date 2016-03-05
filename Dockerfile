@@ -17,15 +17,17 @@ RUN locale-gen en_US.UTF-8 && \
     apt-get update -q && \
     # Remove iceweasel in favor of firefox
     apt remove iceweasel && \
-    # curl is a prereq to be able to download chrome
-    DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends curl && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
+        # curl is a prereq to be able to download chrome
+        ca-certificates \
+        curl && \
 
     # Key for chrome
     echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list && \
     curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
 
     # Key for firefox
-	echo "deb http://downloads.sourceforge.net/project/ubuntuzilla/mozilla/apt all main" > /etc/apt/sources.list.d/ubuntuzilla.list && \
+    echo "deb http://downloads.sourceforge.net/project/ubuntuzilla/mozilla/apt all main" > /etc/apt/sources.list.d/ubuntuzilla.list && \
     apt-key adv --recv-keys --keyserver keyserver.ubuntu.com C1289A29 && \
 
     # Ruby + build tools
@@ -51,7 +53,7 @@ RUN locale-gen en_US.UTF-8 && \
         # Xvfb
         xvfb \
 
-		# For video recording; see headless gem
+        # For video recording; see headless gem
         libav-tools && \
 
     # clean up
