@@ -1,0 +1,10 @@
+# An example Gemfile
+source "https://rubygems.org"
+
+# Required
+gem "chromedriver-helper"
+gem "headless"
+
+# Your choice of
+gem "rspec"           # test framework
+gem "watir-webdriver" # browser driver

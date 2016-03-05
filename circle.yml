@@ -1,0 +1,33 @@
+# Inspired by https://github.com/circleci/docker-elasticsearch/blob/master/circle.yml
+
+machine:
+  services:
+    - docker
+
+dependencies:
+  cache_directories:
+    - "~/docker"
+  override:
+    - docker info
+
+    # Load from cache, if there is one
+    - if [[ -e ~/docker/image.tar ]]; then docker load --input ~/docker/image.tar; fi
+
+    - docker build -t smoll/browser-rb .
+    - docker build -t example ./example
+
+    - docker images
+    # Because the example image contains all the layers of the browser-rb image as well
+    - mkdir -p ~/docker; docker save example > ~/docker/image.tar
+
+test:
+  override:
+    # This volume sharing MAY be needed, ref: https://github.com/SeleniumHQ/docker-selenium#running-the-images
+    - docker run -v /dev/shm:/dev/shm -e "HEADLESS=true" -e "INSIDE_DOCKER=true" example bundle exec rspec
+
+deployment:
+  hub:
+    branch: master
+    commands:
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker push smoll/browser-rb
