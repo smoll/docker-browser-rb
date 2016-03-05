@@ -14,10 +14,20 @@ RUN locale-gen en_US.UTF-8 && \
     printf "path-exclude /usr/share/doc/*\npath-exclude /usr/share/man/*\npath-exclude /usr/share/info/*\npath-exclude /usr/share/lintian/*" >> /etc/dpkg/dpkg.cfg.d/nodoc && \
     cd /usr/share && rm -fr doc/* man/* info/* lintian/* && \
 
+    # Key for chrome
+    curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+    echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list && \
+
+    # Key for firefox
+	echo "deb http://downloads.sourceforge.net/project/ubuntuzilla/mozilla/apt all main" > /etc/apt/sources.list.d/ubuntuzilla.list && \
+    apt-key adv --recv-keys --keyserver keyserver.ubuntu.com C1289A29 && \
+
     # Ruby + build tools
     apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C3173AA6 && \
     echo deb http://ppa.launchpad.net/brightbox/ruby-ng/ubuntu trusty main > /etc/apt/sources.list.d/brightbox-ruby-ng-trusty.list && \
-    apt-get update -q && apt-get install -yq --no-install-recommends \
+    apt-get update -q && \
+    apt remove iceweasel && \
+    apt-get install -yq --no-install-recommends \
         ca-certificates \
         openssl \
         libssl-dev \
@@ -27,7 +37,17 @@ RUN locale-gen en_US.UTF-8 && \
         make \
         patch \
         ruby$RUBY_VERSION \
-        ruby$RUBY_VERSION-dev && \
+        ruby$RUBY_VERSION-dev \
+
+        # Browsers
+        google-chrome-stable \
+        firefox \
+
+        # Xvfb
+        xvfb \
+
+		# For video recording; see headless gem
+        libav-tools && \
 
     # clean up
     rm -rf /var/lib/apt/lists/* && \
