@@ -15,8 +15,8 @@ RUN locale-gen en_US.UTF-8 && \
     cd /usr/share && rm -fr doc/* man/* info/* lintian/* && \
 
     # Key for chrome
-    curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
     echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list && \
+    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - && \
 
     # Key for firefox
 	echo "deb http://downloads.sourceforge.net/project/ubuntuzilla/mozilla/apt all main" > /etc/apt/sources.list.d/ubuntuzilla.list && \
