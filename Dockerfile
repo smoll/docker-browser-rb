@@ -18,7 +18,7 @@ RUN locale-gen en_US.UTF-8 && \
     # Remove iceweasel in favor of firefox
     apt remove iceweasel && \
     # curl is a prereq to be able to download chrome
-    apt-get install -yq --no-install-recommends curl && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends curl && \
 
     # Key for chrome
     echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list && \
