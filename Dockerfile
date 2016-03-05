@@ -14,9 +14,15 @@ RUN locale-gen en_US.UTF-8 && \
     printf "path-exclude /usr/share/doc/*\npath-exclude /usr/share/man/*\npath-exclude /usr/share/info/*\npath-exclude /usr/share/lintian/*" >> /etc/dpkg/dpkg.cfg.d/nodoc && \
     cd /usr/share && rm -fr doc/* man/* info/* lintian/* && \
 
+    apt-get update -q && \
+    # Remove iceweasel in favor of firefox
+    apt remove iceweasel && \
+    # curl is a prereq to be able to download chrome
+    apt-get install -yq --no-install-recommends curl && \
+
     # Key for chrome
     echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list && \
-    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - && \
+    curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
 
     # Key for firefox
 	echo "deb http://downloads.sourceforge.net/project/ubuntuzilla/mozilla/apt all main" > /etc/apt/sources.list.d/ubuntuzilla.list && \
@@ -26,7 +32,6 @@ RUN locale-gen en_US.UTF-8 && \
     apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C3173AA6 && \
     echo deb http://ppa.launchpad.net/brightbox/ruby-ng/ubuntu trusty main > /etc/apt/sources.list.d/brightbox-ruby-ng-trusty.list && \
     apt-get update -q && \
-    apt remove iceweasel && \
     apt-get install -yq --no-install-recommends \
         ca-certificates \
         openssl \
