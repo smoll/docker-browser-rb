@@ -1,9 +1,5 @@
 FROM ubuntu-debootstrap:14.04
 
-ENV LANG      en_US.UTF-8
-ENV LANGUAGE  en_US.UTF-8
-ENV LC_ALL    en_US.UTF-8
-
 # Use a version available on the Brightbox repo (https://www.brightbox.com/docs/ruby/ubuntu/)
 ENV RUBY_VERSION 2.3
 
@@ -64,5 +60,10 @@ RUN locale-gen en_US.UTF-8 && \
     # Setup Rubygems
     echo 'gem: --no-document' > /etc/gemrc && \
     gem install bundler && gem update --system
+
+# Locales
+ENV LANG      en_US.UTF-8
+ENV LANGUAGE  en_US.UTF-8
+ENV LC_ALL    en_US.UTF-8
 
 CMD ["/usr/bin/ruby"]
