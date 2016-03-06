@@ -23,7 +23,7 @@ dependencies:
 test:
   override:
     # This volume sharing MAY be needed, ref: https://github.com/SeleniumHQ/docker-selenium#running-the-images
-    - docker run -v /dev/shm:/dev/shm -e "HEADLESS=true" -e "INSIDE_DOCKER=true" example bundle exec rspec
+    - docker run -t -v /dev/shm:/dev/shm -e "HEADLESS=true" -e "INSIDE_DOCKER=true" example bundle exec rspec
 
 deployment:
   hub:
