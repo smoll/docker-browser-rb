@@ -3,6 +3,9 @@ FROM ubuntu-debootstrap:14.04
 # Use a version available on the Brightbox repo (https://www.brightbox.com/docs/ruby/ubuntu/)
 ENV RUBY_VERSION 2.3
 
+# Install this exact same version when developing locally, outside of Docker, or every docker cache will always be invalidated due to changed Gemfile.lock `BUNDLED WITH` line
+ENV BUNDLER_VERSION 1.11.2
+
 # Locale stuff
 RUN locale-gen en_US.UTF-8 && \
     update-locale LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8 LC_ALL=en_US.UTF-8 && \
@@ -59,7 +62,7 @@ RUN locale-gen en_US.UTF-8 && \
 
     # Setup Rubygems
     echo 'gem: --no-document' > /etc/gemrc && \
-    gem install bundler && gem update --system
+    gem install bundler -v $BUNDLER_VERSION && gem update --system
 
 # Locales
 ENV LANG      en_US.UTF-8
