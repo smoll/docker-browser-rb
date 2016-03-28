@@ -15,3 +15,9 @@ The aforementioned example is also cleverly leveraged by the CircleCI build to v
 [![Circle CI](https://circleci.com/gh/smoll/docker-browser-rb.svg?style=svg)](https://circleci.com/gh/smoll/docker-browser-rb)
 
 [![](https://badge.imagelayers.io/smoll/browser-rb:latest.svg)](https://imagelayers.io/?images=smoll/browser-rb:latest 'Get your own badge on imagelayers.io')
+
+## Gotchas
+
+* Ensure that your test code starts Xvfb (using the `headless` gem is recommended) _BEFORE_ you attempt to launch a browser; the code should look something [like this](https://github.com/smoll/docker-browser-rb/blob/4247377056fc3954a6bae59e1632d8a527e8a49d/example/spec/spec_helper.rb#L8-L11).
+
+* Ensure that you start chrome with the `--no-sandbox` flag, or else it blows up inside of the Docker container. Something to do with the fact that its sandboxing makes use of unix containers as well; for watir-webdriver, the code looks [like this](https://github.com/smoll/docker-browser-rb/blob/4247377056fc3954a6bae59e1632d8a527e8a49d/example/spec/chrome_spec.rb#L4).
